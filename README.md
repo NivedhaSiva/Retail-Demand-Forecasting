@@ -1,41 +1,24 @@
 # Retail Demand Forecasting
 
-An exploratory retail sales forecasting capstone by Nivedha Sivakumar. The notebook explores sales patterns and implements regression, time-series, and neural-network approaches.
+Revised ML learning project by Nivedha Sivakumar, using calendar and scheduled retail features.
 
-## Methods implemented
+## Repairs
+- Chronological expanding-window validation for April, May, and June 2015; one separate July holdout after model selection.
+- Exclude contemporaneous customer counts. Fit preprocessing on training windows only.
+- Compare seasonal-naive, linear regression, decision tree and random forest; report MAE, RMSE, and WAPE on original sales units.
+- Fixed, evenly spaced 30-store cohort chosen from IDs only; set `STORE_LIMIT=None` for all stores. Results are cohort-specific.
+- Replace obsolete APIs and legacy ARIMA/ANN/LSTM/PCA experiments with a coherent ML evaluation. The original notebook remains in Git history.
 
-- Date feature engineering and exploratory visualizations of sales, promotions, holidays, and customer activity.
-- Linear regression, decision tree regression, and random forest regression.
-- Principal component analysis experiments.
-- Store-level AR, MA, and ARIMA experiments, stationarity checks, and seasonal decomposition.
-- LSTM and dense neural-network experiments using Keras.
-- RMSE, MAE, and cross-validation calculations.
+## Reproduce
+Python 3.12: `pip install -r requirements.txt`. Place authorized `train_data.csv`, `test_data.csv`, and `test_data_hidden.csv` in `data/`. Run `retail_demand_forecasting.ipynb` top-to-bottom. Test dates are parsed explicitly in their supplied formats. Scheduled opening, promotion, and holiday features are assumed known for the forecast horizon.
 
-The presence of an import does not mean that algorithm was trained. For example, XGBoost is imported in the original notebook but is not listed here as a completed model comparison.
+Executed successfully top-to-bottom on the local source data using Python 3.12. Exact tested package versions are recorded in requirements-lock.txt. All six saved figures across the two retail projects were visually reviewed. Direct package versions are pinned in requirements.txt; requirements-lock.txt records the full shared review environment (including packages unused by this project).
 
-## Files and data
+## Limits
+Historical one-month evaluation on a fixed cohort does not establish full-chain or current performance. Course-file provenance and redistribution rights are unverified. Data is not published. This has not been identified as the missing Walmart project.
 
-- `retail_demand_forecasting.ipynb`: original computational cells, with saved outputs and nonessential metadata removed for public sharing.
-- `requirements.txt`: package names referenced by the notebook; this is not a tested environment lockfile.
+## Executed results
 
-The original input files are `train_data.csv`, `test_data.csv`, and `test_data_hidden.csv`. Place authorized local copies beside the notebook. They are excluded from this repository. Dataset redistribution rights and the original download source have not been established. This is the saved retail demand capstone; it has not been identified as the missing Walmart project.
+Expanding-window validation selected linear regression. The July 2015 holdout contains 930 store-days across 30 preselected stores. Holdout MAE: 791.19; RMSE: 1113.01 sales units; WAPE: 12.57%. Seasonal-naive WAPE: 24.35%. These are historical cohort results, not full-chain or current performance.
 
-## Execution status
-
-This is a historical Python 3.9.7 notebook, preserved as an exploration rather than a production forecasting system. It has not been rerun during repository preparation. No independently validated accuracy or business-impact claim is made.
-
-Several APIs require migration before use with current libraries: `statsmodels.tsa.arima_model.ARIMA`, `pd.datetime`, the `freq` argument to seasonal decomposition, and `keras.wrappers.scikit_learn`. Seaborn `distplot` is also legacy. Package versions from the original environment were not saved.
-
-To reproduce, restore the input files, create an isolated Python environment, install and reconcile dependencies, select the corresponding Jupyter kernel, and run the notebook from its folder. An execution check after resolving compatibility issues is:
-
-```sh
-jupyter nbconvert --execute --to notebook --output retail_demand_forecasting.executed.ipynb retail_demand_forecasting.ipynb --ExecutePreprocessor.timeout=1800
-```
-
-## Interpretation limits
-
-Some experimental scores are calculated on training data rather than a held-out set. Random splits also occur in this time-dependent dataset. The ANN section compares inverse-transformed predictions against scaled targets. These scores should not be presented as validated forecasting performance. A future revision should use chronological evaluation, consistent units, and a reproducible baseline.
-
-## Author
-
-Nivedha Sivakumar | [GitHub](https://github.com/NivedhaSiva) | [LinkedIn](https://linkedin.com/in/nivedhasivakumar)
+Machine-readable aggregate results are in `results.json`; source data and customer-level predictions are excluded.
